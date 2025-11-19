@@ -18,6 +18,7 @@ public class JDBCUtil {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+        
         return conn;
     }
     public static void main(String[] args) {
