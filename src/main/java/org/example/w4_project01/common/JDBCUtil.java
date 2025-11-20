@@ -11,7 +11,7 @@ public class JDBCUtil {
         try {
             if (conn == null || conn.isClosed()) {
                 Class.forName("org.mariadb.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/MyMariaDB", "root", "1234");
+                conn = DriverManager.getConnection("jdbc:mariadb://walab.handong.edu:3306/W25_22400509", "W25_22400509", "eigh2U");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

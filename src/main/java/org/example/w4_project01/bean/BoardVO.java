@@ -6,18 +6,28 @@ public class BoardVO {
     private int id;
     private String title;
     private String content;
-    private String author;
+    private String date;
     private String writer;
     private String category;
+    private String is_public;
 
     public BoardVO() {
     }
 
-    public BoardVO(String title, String writer, String content, String category) {
+    public String getIs_public() {
+        return is_public;
+    }
+
+    public void setIs_public(String is_public) {
+        this.is_public = is_public;
+    }
+
+    public BoardVO(String title, String writer, String content, String category, String is_public) {
         this.title = title;
         this.writer = writer;
         this.content = content;
         this.category = category;
+        this.is_public = is_public;
     }
 
     public String getCategory() {
@@ -28,7 +38,6 @@ public class BoardVO {
         this.category = category;
     }
 
-    private String date;
     private int cnt;
 
     public int getId() {
@@ -55,14 +64,6 @@ public class BoardVO {
         this.content = content;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getWriter() {
         return writer;
     }
@@ -77,13 +78,5 @@ public class BoardVO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public int getCnt() {
-        return cnt;
-    }
-
-    public void setCnt(int cnt) {
-        this.cnt = cnt;
     }
 }
