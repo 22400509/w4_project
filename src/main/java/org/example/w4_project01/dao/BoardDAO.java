@@ -15,7 +15,7 @@ public class BoardDAO {
     private final String BOARD_LIST = "select * from BOARD order by regdate desc";
     private final String BOARD_DELETE = "delete from BOARD where id=?";
     private final String BOARD_UPDATE = "update BOARD set title=?, writer=?, content=?, category=?, is_public=? where id=?";
-
+    private final String BOARD_GET = "select * from BOARD where id=?";
     public List<BoardVO> getBoardList() {
         List<BoardVO> list = new ArrayList<BoardVO>();
         try {
@@ -70,8 +70,31 @@ public class BoardDAO {
         return 0;
     }
 
-    public int updateBoard(BoardVO vo) {
+//    public int updateBoard(BoardVO vo) {
+//
+//    }
 
+    public BoardVO getBoard(int id) {
+        BoardVO one = null;
+        try{
+            conn = JDBCUtil.getConnection();
+            pstmt = conn.prepareStatement(BOARD_GET);
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+            if(rs.next()){
+                one = new BoardVO();
+                one.setId(rs.getInt("id"));
+                one.setTitle(rs.getString("title"));
+                one.setWriter(rs.getString("writer"));
+                one.setContent(rs.getString("content"));
+                one.setCategory(rs.getString("category"));
+                one.setIs_public(rs.getString("is_public"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return one;
     }
     public static void main(String arg[]) {
         BoardVO vo = new BoardVO("글 제목입니다", "nam", "글 내용입니다", "카테고리 입니다.", "공개글입니다");
