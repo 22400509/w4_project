@@ -28,8 +28,6 @@
     List<BoardVO> list = boardDAO.getBoardList();
     request.setAttribute("list", list);
 %>
-
-
     <div class="container bg-white p-4 rounded shadow-sm" style="max-width: 800px;">
 
     <div class="d-flex justify-content-end mb-3">
