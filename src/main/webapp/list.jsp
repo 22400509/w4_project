@@ -34,28 +34,47 @@
             font-weight: 400;
             font-style: normal;
         }
+        .jj {
+            font-family: "Jua", sans-serif;
+        }
 
 
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100 py-4">
-<nav class="navbar navbar-dark mb-4 shadow-sm" style="background-color: #052c65;">
-    <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center fs-2" href="list.jsp">
-            <img src="img/logo.png" width="60" height="60" class="me-2" alt="로고">에브리전전타임
-        </a>
-    </div>
-</nav>
+<div class="top"><jsp:include page="top.jsp" /></div>
 <div class="flex-grow-1">
 <h1 class="fw-bold">메인 게시판</h1>
 <%
-    BoardDAO boardDAO = new BoardDAO();
-    List<BoardVO> list = boardDAO.getBoardList();
+    String key = request.getParameter("key");
+    String word = request.getParameter("word");
+
+    BoardDAO dao = new BoardDAO();
+
+    List<BoardVO> list = dao.getBoardList(key, word);
+
     request.setAttribute("list", list);
+
     int virtualNum = list.size();
 %>
     <div class="container bg-white p-4 rounded shadow-sm" style="max-width: 800px;">
+        <form action="list.jsp" method="get" class="d-flex justify-content-center mb-4">
 
+            <div class="input-group" style="max-width: 500px;">
+                <select name="key" class="form-select" style="max-width: 120px;">
+                    <option value="title">제목</option>
+                    <option value="writer">작성자</option>
+                    <option value="content">내용</option>
+                </select>
+
+                <input type="text" name="word" class="form-control" placeholder="검색어를 입력하세요"
+                       value="<%= (word != null) ? word : "" %>">
+
+                <button class="btn btn-primary" type="submit">검색</button>
+                <a href="list.jsp" class="btn btn-secondary">전체보기</a>
+                <a href></a>
+            </div>
+        </form>
     <div class="d-flex justify-content-end mb-3">
         <a href="write.jsp" class="btn btn-primary fw-bold">새 글 쓰기</a>
     </div>
@@ -80,7 +99,7 @@
                     <td class="text-center">${u.writer}</td>
                     <td class="text-center">${u.date}</td>
                     <td class="text-center">
-                        <a href="view.jsp?id=${u.id}" class="btn btn-secondary btn-sm">보기</a>
+                        <a href="view.jsp?id=${u.id}" class="btn btn-secondary btn-sm jj">보기</a>
                     </td>
                 </tr>
             </c:forEach>
@@ -88,6 +107,6 @@
         </table>
 </div>
 </div>
-<div class="footer"><jsp:include page="footer.jsp" /></div>
+<div class="footer"><jsp:include page="bottom.jsp" /></div>
 </body>
 </html>
