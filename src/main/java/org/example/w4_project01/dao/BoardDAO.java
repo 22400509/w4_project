@@ -29,6 +29,7 @@ public class BoardDAO {
                 one.setWriter(rs.getString("writer"));
                 one.setContent(rs.getString("content"));
                 one.setCategory(rs.getString("category"));
+                one.setDate(rs.getString("regdate"));
                 one.setIs_public(rs.getString("is_public"));
                 list.add(one);
             }
@@ -40,7 +41,6 @@ public class BoardDAO {
     }
 
     public int insertBoard(BoardVO vo) {
-
         try {
             conn = JDBCUtil.getConnection();
             pstmt = conn.prepareStatement(BOARD_INSERT);
@@ -70,9 +70,23 @@ public class BoardDAO {
         return 0;
     }
 
-//    public int updateBoard(BoardVO vo) {
-//
-//    }
+    public int updateBoard(BoardVO vo) {
+        try {
+            conn = JDBCUtil.getConnection();
+            pstmt = conn.prepareStatement(BOARD_UPDATE);
+            pstmt.setString(1, vo.getTitle());
+            pstmt.setString(2, vo.getWriter());
+            pstmt.setString(3, vo.getContent());
+            pstmt.setString(4, vo.getCategory());
+            pstmt.setString(5, vo.getIs_public());
+            pstmt.setInt(6, vo.getId());
+            pstmt.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     public BoardVO getBoard(int id) {
         BoardVO one = null;
