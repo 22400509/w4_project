@@ -16,12 +16,28 @@ public class BoardDAO {
     private final String BOARD_DELETE = "delete from BOARD where id=?";
     private final String BOARD_UPDATE = "update BOARD set title=?, writer=?, content=?, category=?, is_public=? where id=?";
     private final String BOARD_GET = "select * from BOARD where id=?";
-    public List<BoardVO> getBoardList() {
+
+    public List<BoardVO> getBoardList(String key, String word) {
         List<BoardVO> list = new ArrayList<BoardVO>();
+
         try {
             conn = JDBCUtil.getConnection();
-            pstmt = conn.prepareStatement(BOARD_LIST);
+
+            String sql = "select * from BOARD ";
+
+            if (word != null && !word.equals("")) {
+                sql += " WHERE " + key + " LIKE '%" + word + "%' ";
+            }
+
+            // 3. 정렬 순서 (최신순)
+            sql += "order by regdate desc";
+
+            // [디버깅용] 콘솔에 찍어서 쿼리가 잘 만들어졌는지 확인해보세요!
+            System.out.println("SQL 확인: " + sql);
+
+            pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
+
             while (rs.next()) {
                 BoardVO one = new BoardVO();
                 one.setId(rs.getInt("id"));
@@ -29,8 +45,8 @@ public class BoardDAO {
                 one.setWriter(rs.getString("writer"));
                 one.setContent(rs.getString("content"));
                 one.setCategory(rs.getString("category"));
-                one.setDate(rs.getString("regdate"));
                 one.setIs_public(rs.getString("is_public"));
+                one.setDate(rs.getString("regdate"));
                 list.add(one);
             }
             rs.close();
