@@ -1,4 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="org.example.w4_project01.dao.BoardDAO" %>
+<%@ page import="org.example.w4_project01.bean.BoardVO" %>
+
+<%
+    String id = request.getParameter("id");
+    BoardDAO dao = new BoardDAO();
+    BoardVO u = dao.getBoard(Integer.parseInt(id));
+%>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -43,23 +51,24 @@
     </div>
 </nav>
 <div class="flex-grow-1">
-<h1 class="fw-bold">게시물 추가</h1>
+<h1 class="fw-bold">게시물 수정</h1>
 
 <div class="container bg-white p-4 rounded shadow-sm" style="max-width: 700px;">
 
-    <form action="write_ok.jsp" method="post">
+    <form action="edit_ok.jsp" method="post">
+        <input type="hidden" name="id" value="<%=u.getId()%>">
 
         <div class="row mb-3">
             <label for="title" class="col-sm-2 col-form-label fw-bold">제목:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="title" name="title" />
+                <input type="text" class="form-control" id="title" name="title" value="<%=u.getTitle()%>"/>
             </div>
         </div>
 
         <div class="row mb-3">
             <label for="writer" class="col-sm-2 col-form-label fw-bold">작성자:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="writer" name="writer" />
+                <input type="text" class="form-control" id="writer" name="writer" value="<%=u.getWriter()%>"/>
             </div>
         </div>
 
@@ -67,9 +76,9 @@
             <label for="category" class="col-sm-2 col-form-label fw-bold">카테고리:</label>
             <div class="col-sm-10">
                 <select class="form-select" id="category" name="category">
-                    <option value="공지사항">공지사항</option>
-                    <option value="자유게시판">자유게시판</option>
-                    <option value="질문답변">질문답변</option>
+                    <option value="공지사항" <%=u.getCategory().equals("공지사항")?"selected":""%>>공지사항</option>
+                    <option value="자유게시판" <%=u.getCategory().equals("자유게시판")?"selected":""%>>자유게시판</option>
+                    <option value="질문답변" <%=u.getCategory().equals("질문답변")?"selected":""%>>질문답변</option>
                 </select>
             </div>
         </div>
@@ -77,7 +86,8 @@
         <div class="row mb-3">
             <label for="content" class="col-sm-2 col-form-label fw-bold">내용:</label>
             <div class="col-sm-10">
-                <textarea class="form-control" id="content" name="content" style="height: 150px;"></textarea>
+                <textarea class="form-control" id="content" name="content" style="height: 150px;"><%=u.getContent()%>
+                </textarea>
             </div>
         </div>
 
@@ -86,7 +96,8 @@
             <div class="col-sm-10 d-flex align-items-center">
 
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="isPublic" name="is_public" checked value="공개"/>
+                    <input class="form-check-input" type="checkbox" id="isPublic" name="is_public" value="공개"
+                            <%= (u.getIs_public() != null) ? "checked" : "" %> />
                     <label class="form-check-label" for="isPublic">
                         이 글을 공개로 설정합니다.
                     </label>
@@ -97,7 +108,7 @@
         <hr class="my-4">
 
         <div class="d-grid gap-2">
-            <input type="submit" class="btn btn-primary btn-lg" value="저장하기" />
+            <input type="submit" class="btn btn-primary btn-lg" value="수정하기" />
         </div>
 
     </form>
