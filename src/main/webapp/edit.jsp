@@ -33,7 +33,10 @@
         .footer {
              font-family: sans-serif;
          }
-        .py-4 {
+        .top,
+        .title,
+        .submit,
+        .row{
             font-family: "Jua", sans-serif;
             font-weight: 400;
             font-style: normal;
@@ -42,14 +45,14 @@
 
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100 py-4">
+<body class="d-flex flex-column min-vh-100">
 <div class="top"><jsp:include page="top.jsp" /></div>
 <div class="flex-grow-1">
-<h1 class="fw-bold">게시물 수정</h1>
+<h1 class="fw-bold title">게시물 수정</h1>
 
 <div class="container bg-white p-4 rounded shadow-sm" style="max-width: 700px;">
 
-    <form action="edit_ok.jsp" method="post">
+    <form action="edit_ok.jsp" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<%=u.getId()%>">
 
         <div class="row mb-3">
@@ -76,7 +79,7 @@
                 </select>
             </div>
         </div>
-
+       
         <div class="row mb-3">
             <label for="content" class="col-sm-2 col-form-label fw-bold">내용:</label>
             <div class="col-sm-10">
@@ -88,7 +91,6 @@
         <div class="row mb-3">
             <label class="col-sm-2 col-form-label fw-bold">공개글:</label>
             <div class="col-sm-10 d-flex align-items-center">
-
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="isPublic" name="is_public" value="공개"
                             <%= (u.getIs_public() != null) ? "checked" : "" %> />
@@ -98,11 +100,27 @@
                 </div>
             </div>
         </div>
-
+        <div class="row mb-3">
+            <label for="image" class="col-sm-2 col-form-label fw-bold">이미지:</label>
+            <div class="col-sm-10">
+                <p class="text-muted small mb-1">
+                    <span class="text-danger">*</span> 아래 이미지는 수정 전 이미지 입니다.
+                </p>
+                <input type="file" class="form-control" id="image" name="image">
+                <input type="hidden" name="beforeImage" value="<%=u.getImage()%>">
+                <br>
+                <div class="mb-3 text-center">
+                    <span class="form-control-plaintext bg-light rounded px-2">
+                    <img src="./upload/<%=u.getImage()%>" class="img-fluid rounded" style="max-width: 50%;" alt="첨부이미지">
+                    </span>
+                </div>
+            </div>
+        </div>
+        
         <hr class="my-4">
 
-        <div class="d-grid gap-2">
-            <input type="submit" class="btn btn-primary btn-lg" value="수정하기" />
+        <div class="d-grid gap-2 submit">
+            <input type="submit" class="btn btn-primary btn-lg" onclick="return confirm('정말 수정 하시겠습니까?')" value="수정하기" />
         </div>
 
     </form>

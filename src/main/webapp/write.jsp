@@ -25,7 +25,9 @@
         .footer {
              font-family: sans-serif;
          }
-        .py-4 {
+        .top,
+        .title,
+        .form {
             font-family: "Jua", sans-serif;
             font-weight: 400;
             font-style: normal;
@@ -34,14 +36,14 @@
 
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100 py-4">
+<body class="d-flex flex-column min-vh-100">
 <div class="top"><jsp:include page="top.jsp" /></div>
 <div class="flex-grow-1">
-<h1 class="fw-bold">게시물 추가</h1>
+<h1 class="fw-bold title">게시물 추가</h1>
 
 <div class="container bg-white p-4 rounded shadow-sm" style="max-width: 700px;">
 
-    <form action="write_ok.jsp" method="post">
+    <form action="write_ok.jsp" method="post" class="form" enctype="multipart/form-data">
 
         <div class="row mb-3">
             <label for="title" class="col-sm-2 col-form-label fw-bold">제목:</label>
@@ -65,6 +67,13 @@
                     <option value="자유게시판">자유게시판</option>
                     <option value="질문답변">질문답변</option>
                 </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="image" class="col-sm-2 col-form-label fw-bold">이미지:</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" id="image" name="image">
             </div>
         </div>
 
