@@ -11,13 +11,14 @@ public class BoardDAO {
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
-    private final String BOARD_INSERT = "insert into BOARD (title, writer,content, category, is_public) values(?,?,?,?,?)";
-    private final String BOARD_LIST = "select * from BOARD order by regdate desc";
+    private final String BOARD_INSERT = "insert into BOARD (title, writer, content, category, is_public, image) values(?,?,?,?,?,?)";
+    private final String BOARD_LIST = "select * from BOARD where id=?";
     private final String BOARD_DELETE = "delete from BOARD where id=?";
-    private final String BOARD_UPDATE = "update BOARD set title=?, writer=?, content=?, category=?, is_public=? where id=?";
+    private final String BOARD_UPDATE = "update BOARD set title=?, writer=?, content=?, category=?, is_public=?, image=? where id=?";
     private final String BOARD_GET = "select * from BOARD where id=?";
+    private final String BOARD_UPDATE_VIEW = "update BOARD set view=view+1 where id=?";
 
-    public List<BoardVO> getBoardList(String key, String word) {
+    public List<BoardVO> getBoardList(String key, String word, String viewOrUpdate) {
         List<BoardVO> list = new ArrayList<BoardVO>();
 
         try {
@@ -29,15 +30,14 @@ public class BoardDAO {
                 sql += " WHERE " + key + " LIKE '%" + word + "%' ";
             }
 
-            // 3. 정렬 순서 (최신순)
-            sql += "order by regdate desc";
-
-            // [디버깅용] 콘솔에 찍어서 쿼리가 잘 만들어졌는지 확인해보세요!
-            System.out.println("SQL 확인: " + sql);
+            if("viewL".equals(viewOrUpdate)) sql += "order by view ASC";
+            else if("viewH".equals(viewOrUpdate)) sql += "order by view desc";
+            else sql += "order by regdate desc";
 
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
+            System.out.println("SQL 확인: " + sql);
             while (rs.next()) {
                 BoardVO one = new BoardVO();
                 one.setId(rs.getInt("id"));
@@ -47,6 +47,8 @@ public class BoardDAO {
                 one.setCategory(rs.getString("category"));
                 one.setIs_public(rs.getString("is_public"));
                 one.setDate(rs.getString("regdate"));
+                one.setImage(rs.getString("image"));
+                one.setView(rs.getInt("view"));
                 list.add(one);
             }
             rs.close();
@@ -65,6 +67,8 @@ public class BoardDAO {
             pstmt.setString(3, vo.getContent());
             pstmt.setString(4, vo.getCategory());
             pstmt.setString(5, vo.getIs_public());
+            pstmt.setString(6, vo.getImage());
+            pstmt.setInt(7, vo.getId());
             pstmt.executeUpdate();
             return 1;
         } catch (Exception e) {
@@ -73,11 +77,11 @@ public class BoardDAO {
         return 0;
     }
 
-    public int deleteBoard(BoardVO vo) {
+    public int deleteBoard(int id) {
         try {
             conn = JDBCUtil.getConnection();
             pstmt = conn.prepareStatement(BOARD_DELETE);
-            pstmt.setInt(1, vo.getId());
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
             return 1;
         } catch (Exception e) {
@@ -95,13 +99,43 @@ public class BoardDAO {
             pstmt.setString(3, vo.getContent());
             pstmt.setString(4, vo.getCategory());
             pstmt.setString(5, vo.getIs_public());
-            pstmt.setInt(6, vo.getId());
+            pstmt.setString(6, vo.getImage());
+            pstmt.setInt(7, vo.getId());
             pstmt.executeUpdate();
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public String getFileName(int sid) {
+        String fileName = null;
+
+        try {
+            conn = JDBCUtil.getConnection();
+            pstmt = conn.prepareStatement(BOARD_LIST);
+            pstmt.setInt(1, sid);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                fileName = rs.getString("image");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return fileName;
+    }
+
+    public void increaseView(int sid) {
+        try {
+            conn = JDBCUtil.getConnection();
+            pstmt = conn.prepareStatement(BOARD_UPDATE_VIEW);
+            pstmt.setInt(1, sid);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public BoardVO getBoard(int id) {
@@ -119,6 +153,9 @@ public class BoardDAO {
                 one.setContent(rs.getString("content"));
                 one.setCategory(rs.getString("category"));
                 one.setIs_public(rs.getString("is_public"));
+                one.setImage(rs.getString("image"));
+                one.setDate(rs.getString("regdate"));
+                one.setView(rs.getInt("view"));
             }
             rs.close();
         } catch (SQLException e) {
@@ -126,14 +163,6 @@ public class BoardDAO {
         }
         return one;
     }
-    public static void main(String arg[]) {
-        BoardVO vo = new BoardVO("글 제목입니다", "nam", "글 내용입니다", "카테고리 입니다.", "공개글입니다");
-        BoardDAO dao = new BoardDAO();
-        int result = dao.insertBoard(vo);
-        if (result == 1) {
-            System.out.print("데이터 추가 완료!");
-        }
 
-    }
 }
 

@@ -1,20 +1,18 @@
 <%@ page import="org.example.w4_project01.dao.BoardDAO" %>
 <%@ page import="org.example.w4_project01.bean.BoardVO" %>
+<%@ page import="org.example.w4_project01.common.FileUpload" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    // 한글 깨짐 방지
     request.setCharacterEncoding("UTF-8");
 %>
 
-<jsp:useBean id="vo" class="org.example.w4_project01.bean.BoardVO" />
-
-<jsp:setProperty property="*" name="vo" />
-
 <%
+    FileUpload upload = new FileUpload();
+    BoardVO u = upload.uploadPhoto(request);
     BoardDAO boardDAO = new BoardDAO();
 
-    int i = boardDAO.updateBoard(vo);
+    int i = boardDAO.updateBoard(u);
 
     String msg = "";
 

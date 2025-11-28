@@ -10,6 +10,16 @@ public class BoardVO {
     private String writer;
     private String category;
     private String is_public;
+    private String image;
+    private int view;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public BoardVO() {
     }
@@ -22,12 +32,22 @@ public class BoardVO {
         this.is_public = is_public;
     }
 
-    public BoardVO(String title, String writer, String content, String category, String is_public) {
+    public int getView() {
+        return view;
+    }
+
+    public void setView(int view) {
+        this.view = view;
+    }
+
+    public BoardVO(String title, String writer, String content, String category, String is_public, String image, int view) {
         this.title = title;
         this.writer = writer;
         this.content = content;
         this.category = category;
         this.is_public = is_public;
+        this.image = image;
+        this.view = view;
     }
 
     public String getCategory() {
@@ -79,4 +99,6 @@ public class BoardVO {
     public void setDate(String date) {
         this.date = date;
     }
+
+
 }
